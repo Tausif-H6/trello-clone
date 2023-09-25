@@ -4,7 +4,8 @@ import React, { useEffect } from 'react'
 import { DragDropContext,DropResult,Droppable } from 'react-beautiful-dnd';
 import Columns from './Columns';
 function Board() {
-  const [getBoard,board] = useBoardStore((state)=>[state.getBoard,state.board])
+  const getBoard = useBoardStore((state)=>state.getBoard);
+  const board = useBoardStore((state)=>state.board)
   useEffect(()=>{
     getBoard();
   },[getBoard])
