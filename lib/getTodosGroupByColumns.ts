@@ -50,7 +50,7 @@ const sortedColumns = new Map(
 );
 
 const board:Board={
-    colums:sortedColumns
+    columns:sortedColumns
 }
 
 return board

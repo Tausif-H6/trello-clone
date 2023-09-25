@@ -20,7 +20,7 @@ const handleOnDragEnd =(result: DropResult)=>{}
         ref={provided.innerRef}
         >{
         // Rendering columns
-        Array.from(board.colums.entries()).map(([id,column],index)=>(
+        Array.from(board.columns.entries()).map(([id,column],index)=>(
           <Columns
             key={id}
             id={id}
