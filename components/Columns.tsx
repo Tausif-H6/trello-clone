@@ -40,7 +40,7 @@ function Columns({ id, todos, index }: Props) {
                   {idToColumnText[id]}
 
                   <span className="text-gray-500 bg-gray-200 rounded-full px-2 py-1 text-sm font-normal">
-                    {todos.length}
+                    {!searchString?todos.length: todos.filter(todo=>todo.title.toLocaleLowerCase().includes(searchString.toLocaleLowerCase())).length}
                   </span>
                 </h2>
                 <div className="space-y-2">
