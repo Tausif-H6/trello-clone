@@ -7,10 +7,11 @@ function Board() {
   const getBoard = useBoardStore((state)=>state.getBoard);
   const board = useBoardStore((state)=>state.board)
   const setBoardState =useBoardStore((state)=> state.setBoardState)
+  const updateTodoInDB = useBoardStore ((state)=> state.updateTodoInDB)
   useEffect(()=>{
     getBoard();
   },[getBoard])
-console.log("board",board);
+
 
 const handleOnDragEnd =(result: DropResult)=>{
   const {destination, source,type}= result;
@@ -59,6 +60,22 @@ const handleOnDragEnd =(result: DropResult)=>{
     setBoardState({...board,columns:newColumns})
   }else{
     //dragging to another column
+    const finishedTodos= Array.from(finishCol.todos);
+    finishedTodos.splice(destination.index,0,todoMoved);
+    const newColumns = new Map(board.columns);
+    const newCol = {
+      id:startCol.id,
+      todos:newTodos
+    }
+    newColumns.set(startCol.id, newCol);
+    newColumns.set(finishCol.id,{
+      id:finishCol.id,
+      todos:finishedTodos
+    })
+
+    // Update DB
+    updateTodoInDB(todoMoved,finishCol.id);
+    setBoardState({...board,columns:newColumns})
   }
 
   
