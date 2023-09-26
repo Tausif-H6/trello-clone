@@ -6,11 +6,29 @@ import Columns from './Columns';
 function Board() {
   const getBoard = useBoardStore((state)=>state.getBoard);
   const board = useBoardStore((state)=>state.board)
+  const setBoardState =useBoardStore((state)=> state.setBoardState)
   useEffect(()=>{
     getBoard();
   },[getBoard])
 console.log("board",board);
-const handleOnDragEnd =(result: DropResult)=>{}
+const handleOnDragEnd =(result: DropResult)=>{
+  const {destination, source,type}= result;
+  console.log("destination",destination,"source",source,"type",type);
+  if(!destination)return;
+
+  //Handle Column Drag and drop
+  if(type==="column"){
+    const entries = Array.from(board.columns.entries());
+    const [removed] = entries.splice(source.index,1);
+    entries.splice(destination.index,0,removed);
+    const rearrangedColumns = new Map(entries);
+    setBoardState({
+      ...board,columns:rearrangedColumns
+    })
+
+  }
+  
+}
   return (
     <DragDropContext onDragEnd={handleOnDragEnd}>
       <Droppable droppableId='board' direction='horizontal' type='column'>
@@ -29,7 +47,8 @@ const handleOnDragEnd =(result: DropResult)=>{}
           />
         ))
         
-        }</div> }
+        }{provided.placeholder} {/* Add the placeholder */}
+        </div> }
         
 
       </Droppable>
