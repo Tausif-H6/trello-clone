@@ -16,7 +16,7 @@ interface Todo{
     $createdAt:string;
     title:string;
     status:string;
-    image?:string;
+    image?:Image;
 }
 
 interface Image{
