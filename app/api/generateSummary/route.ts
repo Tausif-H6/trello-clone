@@ -4,7 +4,6 @@ import { NextResponse } from "next/server";
 export async function POST(request: Request) {
   // Todos in the bosy of the POST red
   const { todos } = await request.json();
-  console.log(todos);
   // communicate with OPEN AI GPT
   const response = await openai.chat.completions.create({
     model: "gpt-3.5-turbo",
