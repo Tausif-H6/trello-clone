@@ -1,5 +1,8 @@
 import { databases, storage } from "@/appwrite";
 import { getTodosGroupByColumn } from "@/lib/getTodosGroupByColumns";
+import uploadImage from "@/lib/uploadImage";
+import { ID } from "appwrite";
+import { todo } from "node:test";
 import { create } from "zustand";
 
 interface BoardState {
@@ -16,6 +19,7 @@ interface BoardState {
   setNewTaskType:(columnId:TypedColumn)=>void;
   image:File|null;
   setImage:(image:File|null)=> void;
+  addTask:(todo:string,columnId:TypedColumn,image?:File|null)=>void;
 }
 
 export const useBoardStore = create<BoardState>((set, get) => ({
@@ -65,5 +69,60 @@ export const useBoardStore = create<BoardState>((set, get) => ({
   setNewTaskType:(columnId:TypedColumn)=> set({newTaskType:columnId}),
   
   setImage:(image:File|null)=>set({image}),
+
+  addTask:async(todo:string, columnId:TypedColumn,image?:File|null)=>{
+
+    let file:Image|undefined;
+
+    if(image){
+      const fileUpoaded = await uploadImage(image);
+      //If image uploadedd then we will give info to our variable
+      if(fileUpoaded){
+        file={
+          bucketId:fileUpoaded.bucketId,
+          fileId:fileUpoaded.$id,
+        }
+      }
+    }
+
+   const{$id} = await databases.createDocument(
+      process.env.NEXT_PUBLIC_DATABASE_ID!,
+      process.env.NEXT_PUBLIC_TODOS_COLLECTION_ID!,
+      ID.unique(),
+      {
+        title:todo,
+        status:columnId,
+        //Include the image if exist
+        ...(file&&{image:JSON.stringify(file)})
+      }
+    );
+
+    set({newTaskInput:""});
+    set((state)=>{
+      const newColumn= new Map(state.board.columns);
+      const newTodo: Todo = {
+          $id,
+          $createdAt:new Date().toISOString(),
+          title:todo,
+          status:columnId,
+          ...(file && {image:file})
+      }
+      const column = newColumn.get(columnId);
+      if(!column){
+        newColumn.set(columnId,{
+          id:columnId,
+          todos:[newTodo],
+        })
+      }else{
+        newColumn.get(columnId)?.todos.push(newTodo);
+      }
+
+      return {
+        board:{
+          columns:newColumn,
+        }
+      }
+    })
+  }
 
 }));
