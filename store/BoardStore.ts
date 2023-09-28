@@ -14,6 +14,8 @@ interface BoardState {
   setnewTaskInput:(input:string)=>void;
   newTaskType:TypedColumn;
   setNewTaskType:(columnId:TypedColumn)=>void;
+  image:File|null;
+  setImage:(image:File|null)=> void;
 }
 
 export const useBoardStore = create<BoardState>((set, get) => ({
@@ -22,6 +24,7 @@ export const useBoardStore = create<BoardState>((set, get) => ({
   },
   newTaskInput:"",
   newTaskType:"todo",
+  image:null,
   getBoard: async () => {
     const board = await getTodosGroupByColumn();
     set({ board });
@@ -60,4 +63,7 @@ export const useBoardStore = create<BoardState>((set, get) => ({
 
   setnewTaskInput:(input:string)=> set({newTaskInput:input}), 
   setNewTaskType:(columnId:TypedColumn)=> set({newTaskType:columnId}),
+  
+  setImage:(image:File|null)=>set({image}),
+
 }));
