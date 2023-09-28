@@ -2,6 +2,7 @@
 import getUrl from "@/lib/getUrl";
 import { useBoardStore } from "@/store/BoardStore";
 import { XCircleIcon } from "@heroicons/react/24/solid";
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import {
   DraggableProvidedDragHandleProps,
@@ -37,7 +38,7 @@ function TodoCard({
       };
       fetchImage();
     }
-  }, [todo]);
+  }, [todo]); 
   return (
     <div
       className="bg-white rounded-md space-y-2 drop-shadow-md"
@@ -54,6 +55,17 @@ function TodoCard({
           <XCircleIcon className="ml-5 h-8 w-8" />
         </button>
       </div>
+      {imageUrl&&(
+        <div className="h-full w-full rounded-b-md">
+         <Image
+         src={imageUrl}
+         alt="Task Image"
+         width={400}
+         height={200}
+         className="w-full object-contain rounded-b-md"
+         />
+        </div>
+      )}
     </div>
   );
 }

@@ -36,7 +36,7 @@ function Modal() {
         as="form"
         className="relative z-10"
         onClose={closeModal}
-        onSubmit={(e) => handleSubmit}
+        onSubmit={handleSubmit}
       >
         <div className="fixed insert-0 overflow-y-auto">
           <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
